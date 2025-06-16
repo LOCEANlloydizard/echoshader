@@ -10,7 +10,7 @@ import xarray
 from bokeh.util.warnings import BokehUserWarning
 
 from .box import get_box_plot, get_box_stream
-from .curtain import curtain_plot
+from .curtain import curtain_plot_plotly, curtain_plot_pyvista
 from .echogram import single_echogram, tricolor_echogram
 from .hist import hist_plot, table_plot
 from .map import convert_EPSG, get_track_corners, tile_plot, track_plot
@@ -109,12 +109,21 @@ class Echoshader(param.Parameterized):
             raise ValueError("Dataset must contain a variable named 'Sv'.")
 
         # Check if 'Sv' has correct dimensions
-        expected_dims = ("channel", "ping_time", "echo_range")
+        expected_dims = ("channel", "ping_time", ("depth", "echo_range"))
         actual_dims = self.MVBS_ds["Sv"].dims
-        if actual_dims != expected_dims:
-            raise ValueError(
-                f"'Sv' must have dimensions {expected_dims}, but got {actual_dims}."
-            )
+        for i, (actual, expected) in enumerate(zip(actual_dims, expected_dims)):
+            if isinstance(expected, tuple):
+                if actual not in expected:
+                    raise ValueError(
+                        f"'Sv' dimension at index {i} "
+                        f"must be one of {expected}, but got '{actual}'."
+                    )
+            else:
+                if actual != expected:
+                    raise ValueError(
+                        f"'Sv' dimension at index {i} "
+                        f"must be '{expected}', but got '{actual}'."
+                    )
 
     def _init_widget(self):
         self.colormap = panel.widgets.LiteralInput(
@@ -619,6 +628,7 @@ class Echoshader(param.Parameterized):
         self,
         channel: str = None,
         ratio: float = None,
+        engine: str = "plotly",
         **opts,
     ):
         """
@@ -646,6 +656,8 @@ class Echoshader(param.Parameterized):
             Frequency channel for curtain plot. Default is None.
         ratio : float, optional
             Curtain ratio for spacing. Default is None.
+        engine ： str, optional
+            Engine to render the curtain plot. Default is "plotly".
         opts : dict, optional
             Additional options for plotting.
 
@@ -666,6 +678,7 @@ class Echoshader(param.Parameterized):
         if ratio is not None:
             self.curtain_ratio.value = ratio
 
+        self.curtain_engine = engine
         self.curtain_opts = opts
 
         return self._curtain_plot
@@ -684,20 +697,13 @@ class Echoshader(param.Parameterized):
 
         Returns
         -------
-        panel.panel
-            Curtain plot panel.
+        panel.pane.Plotly
+            Curtain plot panel with Plotly implementation.
         """
-        if self.control_mode_select.value is True:
+        if self.control_mode_select.value:
             MVBS_ds = self.MVBS_ds_in_gram_box
         else:
             MVBS_ds = self.MVBS_ds_in_track_box
-
-        curtain = curtain_plot(
-            MVBS_ds=MVBS_ds.sel(channel=self.channel_select.value),
-            cmap=self.colormap.value,
-            clim=self.Sv_range_slider.value,
-            ratio=self.curtain_ratio.value,
-        )
 
         if "width" not in self.curtain_opts:
             self.curtain_opts["width"] = curtain_opts["width"]
@@ -708,10 +714,26 @@ class Echoshader(param.Parameterized):
         if "orientation_widget" not in self.curtain_opts:
             self.curtain_opts["orientation_widget"] = True
 
-        curtain_panel = panel.panel(
-            curtain.ren_win,
-            **self.curtain_opts,
-        )
+        if self.curtain_engine == "pyvista":
+            self.curtain_opts.setdefault("orientation_widget", True)
+            curtain = curtain_plot_pyvista(
+                MVBS_ds=MVBS_ds.sel(channel=self.channel_select.value),
+                cmap=self.colormap.value,
+                clim=self.Sv_range_slider.value,
+                ratio=self.curtain_ratio.value,
+            )
+            curtain_panel = panel.panel(curtain.ren_win, **self.curtain_opts)
+        elif self.curtain_engine == "plotly":
+            self.curtain_opts.pop("orientation_widget", None)
+            curtain = curtain_plot_plotly(
+                MVBS_ds=MVBS_ds.sel(channel=self.channel_select.value),
+                cmap=self.colormap.value,
+                clim=self.Sv_range_slider.value,
+                ratio=self.curtain_ratio.value,
+            )
+            curtain_panel = panel.pane.Plotly(curtain, **self.curtain_opts)
+        else:
+            raise ValueError(f"Unsupported backend: {self.curtain_engine}")
 
         return curtain_panel
 

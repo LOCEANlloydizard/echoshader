@@ -196,9 +196,6 @@ def test_curtain(get_data):
         MVBS_ds.eshader.curtain(),
     )
 
-    # Remember to set panel extension to "pyvista" when showing 2.5D curtain
-    panel.extension("pyvista")
-
     # Check if the panel is created without raising an exception
     assert isinstance(curtain_panel, panel.Row)
 
@@ -230,7 +227,6 @@ def test_curtain_echogram_integration(get_data):
         echogram_panel,
         curtain_panel,
     )
-
     # Check if the panel is created without raising an exception
     assert isinstance(integration_panel, panel.Column)
 
