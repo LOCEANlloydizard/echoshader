@@ -75,10 +75,10 @@ def convert_EPSG(
     """
     if mercator_to_coord is True:
         transformer = Transformer.from_crs(EPSG_mercator, EPSG_coordsys)
-        (lat, lon) = transformer.transform(xx=lon, yy=lat)
+        lat, lon = transformer.transform(xx=lon, yy=lat)
     else:
         transformer = Transformer.from_crs(EPSG_coordsys, EPSG_mercator)
-        (lon, lat) = transformer.transform(xx=lat, yy=lon)
+        lon, lat = transformer.transform(xx=lat, yy=lon)
 
     return lat, lon
 
