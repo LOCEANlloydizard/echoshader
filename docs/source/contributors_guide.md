@@ -8,7 +8,7 @@ and organization of these data. The visualizations in [echoshader](https://githu
 
 ## Getting Started
 
-1. Read the [documentation](https://echoshader.readthedocs.io/en/latest/echoshader_doc/index.html)
+1. Read the [documentation](https://echoshader.readthedocs.io/en/latest/index.html)
 
 * Install `echoshader` and run the example [notebooks](https://github.com/OSOceanAcoustics/echoshader/tree/main/docs/source/version_0.1.0)
 * [Report](https://github.com/OSOceanAcoustics/echoshader/issues/new) any existing issues (first check if the problem has been already reported)
