@@ -6,6 +6,7 @@ sphinx-togglebutton
 sphinx-copybutton
 sphinx-thebe
 sphinx-comments
+sphinx-external-toc
 jupyter-book
 numpydoc
 docutils<0.18
