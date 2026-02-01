@@ -5,6 +5,7 @@ sphinxcontrib-mermaid
 sphinx-togglebutton
 sphinx-copybutton
 sphinx-thebe
+sphinx-comments
 jupyter-book
 numpydoc
 docutils<0.18
