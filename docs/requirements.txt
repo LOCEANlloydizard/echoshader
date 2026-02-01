@@ -3,6 +3,7 @@ sphinx-automodapi
 sphinx-panels
 sphinxcontrib-mermaid
 sphinx-togglebutton
+sphinx-copybutton
 jupyter-book
 numpydoc
 docutils<0.18
