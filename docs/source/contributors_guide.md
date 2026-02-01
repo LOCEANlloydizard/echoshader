@@ -10,7 +10,7 @@ and organization of these data. The visualizations in [echoshader](https://githu
 
 1. Read the [documentation](https://echoshader.readthedocs.io/en/latest/echoshader_doc/index.html)
 
-* Install `echoshader` and run the example [notebooks](https://github.com/OSOceanAcoustics/echoshader/tree/main/docs/source/echoshader_doc/version_0.1.0)
+* Install `echoshader` and run the example [notebooks](https://github.com/OSOceanAcoustics/echoshader/tree/main/docs/source/version_0.1.0)
 * [Report](https://github.com/OSOceanAcoustics/echoshader/issues/new) any existing issues (first check if the problem has been already reported)
 * Look through existing [issues](https://github.com/OSOceanAcoustics/echoshader/issues) and identify ones that you can contribute to (the tag `good-first-issue` can be a good starting point)
 * Comment on an issue with the intent to work on a task and get feedback from maintainers
