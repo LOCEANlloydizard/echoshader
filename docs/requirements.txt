@@ -7,3 +7,4 @@ sphinx-copybutton
 jupyter-book
 numpydoc
 docutils<0.18
+myst-nb
