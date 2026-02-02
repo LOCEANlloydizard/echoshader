@@ -17,7 +17,7 @@ By providing an accessible and customizable platform for echo data visualization
 Echoshader relies on several crucial packages which will need to be installed first (best in a separate environment)
 
 ```bash
-mamba create -n echoshader -c pyviz -c conda-forge echopype hvplot geoviews pyvista ipykernel
+mamba create -n echoshader -c conda-forge echopype hvplot geoviews pyvista panel jupyter_bokeh ipykernel
 ```
 
 We recommend use [mamba](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html) to manage conda's environments, which is a re-implementation of conda offering additional benefits.
@@ -44,6 +44,6 @@ This section is intended for those who are actively developing this package.
 To run in development mode, fork and clone the repository at [Echoshader](https://github.com/OSOceanAcoustics/echoshader):
 
 ```bash
-mamba create -c conda-forge -n echoshader-dev --yes python=3.10 --file requirements.txt --file requirements-dev.txt
-pip install -e
+mamba create -c conda-forge -n echoshader-dev --yes python=3.12 --file requirements.txt --file requirements-dev.txt
+pip install -e .
 ```
