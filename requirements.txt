@@ -9,3 +9,6 @@ pyvista
 plotly
 xarray>=2024.11.0
 zarr>=2,<3
+panel
+jupyter_bokeh
+echopype
