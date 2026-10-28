@@ -102,4 +102,6 @@ Runnable examples for the visualization elements are available in:
 
 [`examples/notebooks/element_examples.ipynb`](https://github.com/echostack-org/echoshader/blob/main/examples/notebooks/element_examples.ipynb)
 
-The notebook demonstrates the individual elements directly. Higher-level interactions such as linked selections and shared controls are documented separately as part of the Echoshader application layer.
+The notebook starts with one EK80 RAW file for calibration, MVBS, and geometric resampling examples. Its second part downloads [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip) and extracts `MVBS.zarr` for the track, histogram, table, and curtain examples.
+
+Run it from `examples/notebooks/` to save the dataset where the example application expects it. You can also download and extract the ZIP there manually. Then follow [Building an Echoshader application](app.md) to launch the app with the same dataset.

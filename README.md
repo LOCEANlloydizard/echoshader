@@ -47,7 +47,7 @@ Echoshader provides reusable visualization elements for standardized ocean sonar
 import echoshader
 import xarray as xr
 
-ds = xr.open_dataset("MVBS.nc")
+ds = xr.open_zarr("examples/notebooks/MVBS.zarr")
 
 ds.eshader.echogram(
     channel="WBT 400143-15 ES38B_ES",
@@ -56,7 +56,17 @@ ds.eshader.echogram(
 ```
 
 Available visualization elements include echograms, tricolor echograms, vessel tracks, 3-D curtain plots, histograms, summary tables, curves, and NASC plots.
-See [`examples/notebooks/element_examples.ipynb`](examples/notebooks/element_examples.ipynb) for complete element examples.
+Start with [`examples/notebooks/element_examples.ipynb`](examples/notebooks/element_examples.ipynb). The first part processes one RAW file and demonstrates acoustic geometries; the second downloads and extracts the small example dataset as `MVBS.zarr`. Run the notebook from `examples/notebooks/` so the dataset is saved there.
+
+The dataset is also available directly as [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip). Extract it into `examples/notebooks/` to obtain `examples/notebooks/MVBS.zarr`.
+
+Once the dataset is available, launch the example application from the repository root:
+
+```bash
+python -m echoshader.app.launcher examples/app/app_config.yaml --port 1805
+```
+
+Open <http://localhost:1805/basic>. The example YAML resolves its dataset path relative to its own location. See [the application guide](docs/source/app.md) for configuration and interaction details.
 
 ## Development setup
 

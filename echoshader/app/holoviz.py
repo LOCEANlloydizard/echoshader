@@ -11,8 +11,10 @@ import datetime as dt
 from dataclasses import dataclass
 from pathlib import Path
 
+import echopype.colormap  # noqa: F401 -- registers Echopype colormaps
 import geoviews as gv
 import holoviews as hv
+import matplotlib as mpl
 import numpy as np
 import pandas as pd
 import panel as pn
@@ -138,8 +140,18 @@ def build_acoustic_app(
     )
     cmap = pn.widgets.Select(
         label="Colormap",
-        options=["viridis", "jet", "plasma", "inferno", "magma", "cividis", "turbo", "Greys"],
-        value="viridis",
+        options=[
+            "ep.ek500",
+            "viridis",
+            "jet",
+            "plasma",
+            "inferno",
+            "magma",
+            "cividis",
+            "turbo",
+            "Greys",
+        ],
+        value="ep.ek500",
         width=165,
     )
     rgb_widgets = [
@@ -186,24 +198,27 @@ def build_acoustic_app(
         width=240,
     )
 
-    # keep the slider value itself within bounds, not just the plotted subset
+    # keep the displayed slider interval within the configured limit
     updating = False
 
     def enforce_window(event):
         nonlocal updating
         if updating:
             return
+
         a, b = map(int, event.new)
         a = min(max(0, a), n - 1)
         b = min(n, max(a + 1, b))
+
         if b - a > max_pings:
             previous = tuple(map(int, event.old or initial))
             if a != previous[0] and b == previous[1]:
                 b = min(n, a + max_pings)
             else:
                 a = max(0, b - max_pings)
+
         value = (a, b)
-        if value != tuple(event.new):
+        if value != tuple(timeline.value):
             updating = True
             try:
                 timeline.value = value
@@ -212,20 +227,26 @@ def build_acoustic_app(
 
     timeline.param.watch(enforce_window, "value")
 
-    def slider_committed(event):
-        value = bounded(event.new)
+    def move_selection(value):
+        """Synchronize the slider before publishing the shared interval."""
+        nonlocal updating
+        value = bounded(value)
+
+        updating = True
+        try:
+            if tuple(timeline.value) != value:
+                timeline.value = value
+        finally:
+            updating = False
+
         if tuple(selection.window) != value:
             selection.window = value
+
+    def slider_committed(event):
+        # Commit the corrected interval displayed by the slider.
+        move_selection(tuple(timeline.value))
 
     timeline.param.watch(slider_committed, "value_throttled")
-
-    def move_selection(value):
-        """Update one common state and reflect map changes in the slider."""
-        value = bounded(value)
-        if tuple(selection.window) != value:
-            selection.window = value
-        if tuple(timeline.value) != value:
-            timeline.value = value
 
     syncing_dates = False
 
@@ -299,7 +320,10 @@ def build_acoustic_app(
             ),
             dataset_validation.vertical_dim,
         )
-        # Reuse the standalone element, which handles regular and irregular grids.
+
+        palette = mpl.colormaps["ep.ek500"] if palette == "ep.ek500" else palette
+
+        # reuse the standalone element, which handles regular and irregular grids
         plot = echogram(
             w,
             channel=channel,
@@ -313,7 +337,15 @@ def build_acoustic_app(
             xlim=xrange(bounds),
             invert_yaxis=True,
             colorbar=False,
-            tools=["hover", "pan", "wheel_zoom", "box_zoom", "reset"],
+            default_tools=[],
+            tools=[
+                "hover",
+                "pan",
+                "wheel_zoom",
+                "box_zoom",
+                "reset",
+                "save",
+            ],
             title=label,
         )
         if source.bottom is not None and {"time", "depth"}.issubset(source.bottom):
@@ -330,7 +362,10 @@ def build_acoustic_app(
                     vdims=vert_dim,
                 ).opts(color="black", line_width=2)
                 plot = (plot * line).opts(xlim=xrange(bounds), framewise=True)
-        return plot
+        return pn.pane.HoloViews(
+            plot,
+            linked_axes=False,
+        )
 
     def multifrequency(bounds, clim, palette):
         return pn.Column(
@@ -376,9 +411,17 @@ def build_acoustic_app(
         ).opts(
             width=1000,
             height=450,
-            framewise=True,
+            framewise=False,
             xlim=xrange(bounds),
-            tools=["hover", "pan", "wheel_zoom", "reset"],
+            default_tools=[],
+            tools=[
+                "hover",
+                "pan",
+                "wheel_zoom",
+                "box_zoom",
+                "reset",
+                "save",
+            ],
         )
 
     def selection_label(bounds):
@@ -422,7 +465,18 @@ def build_acoustic_app(
             size=6,
             color="gray",
             alpha=0.7,
-            tools=["hover", "box_select", "tap", "pan", "wheel_zoom", "reset"],
+            selection_color="gray",
+            selection_alpha=0.7,
+            nonselection_color="gray",
+            nonselection_alpha=0.7,
+            tools=[
+                "hover",
+                "box_select",
+                "tap",
+                "pan",
+                "wheel_zoom",
+                "reset",
+            ],
         )
         path = hv.Path([rows[["x", "y"]].to_numpy()]).opts(
             color="black",
@@ -447,41 +501,81 @@ def build_acoustic_app(
             xformatter=longitude_formatter,
             yformatter=latitude_formatter,
         )
-        selected_stream = hv.streams.Selection1D(source=points)
+        selected_stream = hv.streams.Selection1D(source=selectable)
 
         def select_indices(event):
-            indices = np.asarray(event.new if event.new is not None else [], dtype=int)
+            indices = np.asarray(
+                event.new if event.new is not None else [],
+                dtype=int,
+            )
             if not len(indices):
                 return
+
+            indices = indices[(indices >= 0) & (indices < len(rows))]
+            if not len(indices):
+                return
+
             ping_indices = rows.iloc[indices].ping_index.to_numpy(dtype=int)
-            a, b = int(ping_indices.min()), int(ping_indices.max()) + 1
+            a = int(ping_indices.min())
+            b = int(ping_indices.max()) + 1
+
             if b - a > max_pings:
                 midpoint = (a + b) // 2
-                a = max(0, min(n - max_pings, midpoint - max_pings // 2))
+                a = max(
+                    0,
+                    min(n - max_pings, midpoint - max_pings // 2),
+                )
                 b = a + max_pings
-            move_selection((a, b))
+
+            bounds = (a, b)
+            doc = pn.state.curdoc
+            if doc is not None:
+                doc.add_next_tick_callback(lambda: move_selection(bounds))
+            else:
+                move_selection(bounds)
 
         selected_stream.param.watch(select_indices, "index")
 
-        def highlighted_map(bounds):
-            a, b = bounded(bounds)
+        def selected_points(window):
+            a, b = bounded(window)
             selected = rows.loc[rows.ping_index.between(a, b - 1)]
-
-            highlight = hv.Points(selected, kdims=["x", "y"]).opts(color="dodgerblue", size=6)
-
-            return (base * highlight).opts(
-                xlabel="Longitude (°)",
-                ylabel="Latitude (°)",
-                xformatter=longitude_formatter,
-                yformatter=latitude_formatter,
-                xaxis="bottom",
-                yaxis="left",
+            return hv.Points(
+                selected,
+                kdims=["x", "y"],
+            ).opts(
+                color="dodgerblue",
+                alpha=1.0,
+                size=6,
+                selection_color="dodgerblue",
+                selection_alpha=1.0,
+                nonselection_color="dodgerblue",
+                nonselection_alpha=1.0,
+                tools=[],
             )
 
-        map_widget = pn.panel(
-            pn.bind(highlighted_map, selection.param.window),
-            sizing_mode="stretch_both",
-            min_height=520,
+        highlight = hv.DynamicMap(
+            selected_points,
+            streams={"window": selection.param.window},
+        )
+
+        map_plot = (base * highlight).opts(
+            responsive=True,
+            height=source.map_height,
+            data_aspect=None,
+            framewise=False,
+            xlabel="Longitude (°)",
+            ylabel="Latitude (°)",
+            xformatter=longitude_formatter,
+            yformatter=latitude_formatter,
+            xaxis="bottom",
+            yaxis="left",
+        )
+
+        map_widget = pn.pane.HoloViews(
+            map_plot,
+            linked_axes=False,
+            sizing_mode="stretch_width",
+            height=source.map_height,
         )
 
     meta = [
@@ -548,7 +642,7 @@ def build_acoustic_app(
             ),
         ),
         *optional_tabs,
-        dynamic=True,
+        dynamic=False,
         sizing_mode="stretch_width",
     )
     sidebar = pn.Column(
