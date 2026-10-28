@@ -11,6 +11,7 @@ import datetime as dt
 from dataclasses import dataclass
 from pathlib import Path
 
+import echopype.colormap  # noqa: F401 -- registers Echopype colormaps
 import geoviews as gv
 import holoviews as hv
 import matplotlib as mpl
@@ -24,8 +25,6 @@ from bokeh.models import CustomJSTickFormatter
 from echoshader.elements.echogram import echogram, tricolor_echogram
 from echoshader.elements.track import track as track_element
 from echoshader.validation import validate_dataset
-
-import echopype.colormap  # noqa: F401 -- registers Echopype colormaps
 
 hv.extension("bokeh")
 pn.extension("tabulator")
