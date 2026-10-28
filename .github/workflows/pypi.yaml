@@ -15,7 +15,7 @@ jobs:
   build-artifact:
     name: Build echoshader package
     runs-on: ubuntu-22.04
-    if: github.repository == 'echostack-org/echoshader'
+    if: github.repository == 'echostack-org/echoshader' && !startsWith(github.ref, 'refs/tags/example-data-')
     steps:
     - name: Checkout
       uses: actions/checkout@v7
