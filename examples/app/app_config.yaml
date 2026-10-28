@@ -1,16 +1,17 @@
 app:
   title: Echoshader - Application template
-  source: survey
-  route: basic
+  source: survey  # dataset key under data
+  route: basic  # URL path: /basic (use "" for /)
 
 data:
   survey:
     type: zarr
-    path: /path/to/your/calibrated_Sv.zarr
-    label: Acoustic survey
+    path: ../notebooks/MVBS.zarr  # relative path
+    label: NOAA SH2306 Pacific hake survey  # sidebar name
 
 navigation:
-  max_pings: 500
+  max_pings: 500  # maximum time samples per selection
 
 display:
-  max_range_samples: 1200
+  max_range_samples: 1200  # maximum vertical samples displayed
+  map_height: 500  # map height in pixels
