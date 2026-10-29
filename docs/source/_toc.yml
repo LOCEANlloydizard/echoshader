@@ -3,4 +3,5 @@ root: index
 
 chapters:
   - file: elements
+  - file: element_examples
   - file: app
