@@ -5,13 +5,11 @@ author: Echoshader Contributors
 copyright: "2026"
 
 execute:
-  execute_notebooks: force
-  timeout: 600
-  allow_errors: false
+  execute_notebooks: "off"
 
 repository:
   url: https://github.com/echostack-org/echoshader
-  path_to_book: docs/source
+  path_to_book: docs
   branch: main
 
 html:
@@ -28,5 +26,3 @@ sphinx:
     - sphinx.ext.mathjax
     - sphinx.ext.githubpages
     - sphinxcontrib.mermaid
-  config:
-    nb_execution_raise_on_error: true

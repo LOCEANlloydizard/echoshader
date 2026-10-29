@@ -75,7 +75,6 @@ lint = [
 ]
 
 docs = [
-    "ipykernel>=6.30.0",
     "jupyter-book>=1.0.4",
     "linkify-it-py>=2.1.0",
     "myst-nb>=1.2.0",
