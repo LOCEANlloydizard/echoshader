@@ -26,6 +26,10 @@ nb_execution_in_temp = False
 nb_execution_excludepatterns = []
 nb_output_stderr = "show"
 
+nb_kernel_rgx_aliases = {
+    "^echoshader-dev313$": "python3",
+}
+
 extensions = [
     "sphinx_togglebutton",
     "sphinx_copybutton",
