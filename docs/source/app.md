@@ -4,6 +4,8 @@ Echoshader provides a generic, read-only [Panel](https://panel.holoviz.org/) app
 
 The current application has a fixed HoloViz layout configured with a small YAML file. YAML selects the dataset and sets a few navigation/display options; it does not define an arbitrary graph of visualization elements, controls, or interactions. Future developments will allow application-specific features to be added through optional extensions, enabled and configured through YAML.
 
+Before starting, follow the [installation instructions](https://github.com/echostack-org/echoshader#installation) to create and activate an environment and install Echoshader. Clone or download the repository to obtain the example notebooks and application configuration.
+
 ## Requirements
 
 The default app expects an xarray Dataset containing `Sv`, a `channel` coordinate, and an increasing `datetime64` `ping_time` coordinate. The `Sv` variable has dimensions `(channel, ping_time, vertical)`, where `vertical` is `range_sample`, `depth`, or `echo_range`. Physical vertical coordinates such as `depth` and `echo_range` should be provided where appropriate. `frequency_nominal`, `latitude`, and `longitude` enable additional labeling and navigation features when available.
