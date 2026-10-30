@@ -10,6 +10,11 @@ build:
   tools:
     python: "3.13"
 
+  jobs:
+    pre_build:
+      - cp examples/notebooks/element_examples.ipynb docs/source/element_examples.ipynb
+      - cp examples/notebooks/echogram_vertical_coordinates.ipynb docs/source/echogram_vertical_coordinates.ipynb
+
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
   configuration: docs/source/conf.py

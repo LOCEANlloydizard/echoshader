@@ -31,3 +31,6 @@ venv/
 examples/notebooks/*.zarr/
 examples/notebooks/*.zip
 examples/notebooks/concatenated_MVBS.nc
+
+docs/source/element_examples.ipynb
+docs/source/echogram_vertical_coordinates.ipynb

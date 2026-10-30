@@ -56,7 +56,10 @@ ds.eshader.echogram(
 ```
 
 Available visualization elements include echograms, tricolor echograms, vessel tracks, 3-D curtain plots, histograms, summary tables, curves, and NASC plots.
-Start with [`examples/notebooks/element_examples.ipynb`](examples/notebooks/element_examples.ipynb). The first part processes one RAW file and demonstrates acoustic geometries; the second downloads and extracts the small example dataset as `MVBS.zarr`. Run the notebook from `examples/notebooks/` so the dataset is saved there.
+
+Start with [Visualization element examples](examples/notebooks/element_examples.ipynb), which downloads and extracts the processed example dataset as `MVBS.zarr`. Run the notebook from `examples/notebooks/` so the dataset is saved there.
+
+For RAW processing, different vertical coordinates, and geometry matching, see [Echogram vertical coordinates and geometry](examples/notebooks/echogram_vertical_coordinates.ipynb).
 
 The dataset is also available directly as [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip). Extract it into `examples/notebooks/` to obtain `examples/notebooks/MVBS.zarr`.
 

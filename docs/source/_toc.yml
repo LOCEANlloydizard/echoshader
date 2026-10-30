@@ -3,4 +3,6 @@ root: index
 
 chapters:
   - file: elements
+  - file: element_examples
+  - file: echogram_vertical_coordinates
   - file: app

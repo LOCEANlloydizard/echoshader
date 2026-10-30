@@ -14,6 +14,8 @@ Echoshader visualizes xarray acoustic datasets, including Zarr and NetCDF produc
 
 ## Examples
 
-Start with the [element example notebook](https://github.com/echostack-org/echoshader/blob/main/examples/notebooks/element_examples.ipynb), running it from `examples/notebooks/`. It demonstrates the elements and downloads the processed example dataset as `MVBS.zarr`.
+Explore [Visualization element examples](element_examples.ipynb) for plots using the downloadable MVBS dataset, or [Echogram vertical coordinates and geometry](echogram_vertical_coordinates.ipynb) for RAW processing and vertical-coordinate comparisons.
+
+To run the examples locally, open the notebooks in `examples/notebooks/`. The visualization element notebook downloads and extracts the processed example dataset as `MVBS.zarr`.
 
 Alternatively, download [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip) directly and extract it into `examples/notebooks/`. The [example application configuration](https://github.com/echostack-org/echoshader/blob/main/examples/app/app_config.yaml) points to this dataset. Follow [Building an Echoshader application](app.md) to launch the app from the repository root.

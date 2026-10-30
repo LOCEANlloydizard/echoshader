@@ -4,6 +4,8 @@ Echoshader provides a generic, read-only [Panel](https://panel.holoviz.org/) app
 
 The current application has a fixed HoloViz layout configured with a small YAML file. YAML selects the dataset and sets a few navigation/display options; it does not define an arbitrary graph of visualization elements, controls, or interactions. Future developments will allow application-specific features to be added through optional extensions, enabled and configured through YAML.
 
+Before starting, follow the [installation instructions](https://github.com/echostack-org/echoshader#installation) to create and activate an environment and install Echoshader. Clone or download the repository to obtain the example notebooks and application configuration.
+
 ## Requirements
 
 The default app expects an xarray Dataset containing `Sv`, a `channel` coordinate, and an increasing `datetime64` `ping_time` coordinate. The `Sv` variable has dimensions `(channel, ping_time, vertical)`, where `vertical` is `range_sample`, `depth`, or `echo_range`. Physical vertical coordinates such as `depth` and `echo_range` should be provided where appropriate. `frequency_nominal`, `latitude`, and `longitude` enable additional labeling and navigation features when available.
@@ -12,7 +14,7 @@ The app accepts existing **Zarr** or **NetCDF** datasets. Acoustic processing, c
 
 ## Start with the example notebook
 
-Run the [element example notebook](https://github.com/echostack-org/echoshader/blob/main/examples/notebooks/element_examples.ipynb) from `examples/notebooks/`. It first processes one EK80 RAW file to demonstrate echograms and geometric resampling, then downloads the processed survey dataset used by the remaining elements and the example app.
+Preview the plots in [Visualization element examples](element_examples.ipynb). To run the examples locally, open `examples/notebooks/element_examples.ipynb`. Its download cell retrieves the processed MVBS dataset used by the visualization elements and the example app; no RAW processing is required.
 
 The download cell extracts `MVBS.zip` into `MVBS.zarr` in the notebook working directory. Alternatively, download [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip) directly and extract it into `examples/notebooks/`. No RAW processing is required to launch the app with this prepared dataset.
 
