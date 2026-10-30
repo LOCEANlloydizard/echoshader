@@ -96,12 +96,11 @@ The curve element provides a simple one-dimensional HoloViews curve for data tha
 
 The NASC element provides a one-dimensional visualization of nautical area scattering coefficient (NASC) data.
 
-## Example notebook
+## Example notebooks
 
-Runnable examples for the visualization elements are available in:
+- [Visualization element examples](element_examples.ipynb): visualization elements using the downloadable MVBS dataset.
+- [Echogram vertical coordinates and geometry](echogram_vertical_coordinates.ipynb): RAW processing, sample indices, physical range, depth, MVBS, and geometry matching.
 
-[`examples/notebooks/element_examples.ipynb`](https://github.com/echostack-org/echoshader/blob/main/examples/notebooks/element_examples.ipynb)
+Run the notebooks from `examples/notebooks/`. The visualization element notebook downloads and extracts `MVBS.zarr`, also used by the example application.
 
-The notebook starts with one EK80 RAW file for calibration, MVBS, and geometric resampling examples. Its second part downloads [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip) and extracts `MVBS.zarr` for the track, histogram, table, and curtain examples.
-
-Run it from `examples/notebooks/` to save the dataset where the example application expects it. You can also download and extract the ZIP there manually. Then follow [Building an Echoshader application](app.md) to launch the app with the same dataset.
+Alternatively, download [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip) and extract it there. Then follow [Building an Echoshader application](app.md).

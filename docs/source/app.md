@@ -12,7 +12,7 @@ The app accepts existing **Zarr** or **NetCDF** datasets. Acoustic processing, c
 
 ## Start with the example notebook
 
-Run the [element example notebook](https://github.com/echostack-org/echoshader/blob/main/examples/notebooks/element_examples.ipynb) from `examples/notebooks/`. It first processes one EK80 RAW file to demonstrate echograms and geometric resampling, then downloads the processed survey dataset used by the remaining elements and the example app.
+Preview the plots in [Visualization element examples](element_examples.ipynb). To run the examples locally, open `examples/notebooks/element_examples.ipynb`. Its download cell retrieves the processed MVBS dataset used by the visualization elements and the example app; no RAW processing is required.
 
 The download cell extracts `MVBS.zip` into `MVBS.zarr` in the notebook working directory. Alternatively, download [MVBS.zip](https://github.com/echostack-org/echoshader/releases/download/example-data-v1/MVBS.zip) directly and extract it into `examples/notebooks/`. No RAW processing is required to launch the app with this prepared dataset.
 
